@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build Docker image
+      run: |
+        docker build -t marguuss/filegolf:latest .
+        echo ${{ secrets.DOCKERHUBMARUUSSPASSWORD }} | docker login -u marguuss --password-stdin
+        docker push marguuss/filegolf:latest
