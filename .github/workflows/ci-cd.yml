@@ -15,13 +15,13 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '14'
+        node-version: '16' 
 
     - name: Install dependencies
       run: npm install
 
     - name: Build Docker image
       run: |
-        docker build -t marguuss/filegolf:latest .
+        docker build -t marguuss/filegolf:latest . 
         echo ${{ secrets.DOCKERHUBMARUUSSPASSWORD }} | docker login -u marguuss --password-stdin
         docker push marguuss/filegolf:latest
