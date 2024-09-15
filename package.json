@@ -18,6 +18,9 @@
   "homepage": "https://github.com/iammarguuss/filegolf#readme",
   "dependencies": {
     "express": "^4.19.2",
-    "socket.io": "^4.7.5"
+    "install": "^0.13.0",
+    "npm": "^10.8.3",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
   }
 }
