@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html style="background-color: rgb(4, 40, 40);color: rgb(237, 207, 171);">
+<html style="background-color: rgb(4, 40, 40); color: rgb(237, 207, 171);">
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -11,6 +11,12 @@
 <body>
     <h2>We are going to test our Class</h2>
     <hr><br>
-    <input type="file" id="fileInput" value="Make the code shit itself">
+    <input type="radio" id="shareType1" name="shareType" value="p2p">
+    <label for="shareType1">Share via p2p and prefer speed</label><br>
+    <input type="radio" id="shareType2" name="shareType" value="socket">
+    <label for="shareType2">Share via socket and mask yourself</label><hr>  
+    <label>RSA Key Size: <input type="number" id="keySize" value="4096"></label><br>
+    <input type="file" id="fileInput">
+    <button id="sendData">Отправить</button>
 </body>
-</html> 
+</html>

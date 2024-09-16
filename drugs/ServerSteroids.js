@@ -1,3 +1,5 @@
+const ConnectionTest = require('./ConnectionTest');  // Правильное имя для импорта
+
 class ServerSteroids {
     constructor(io) {
         this.io = io;
@@ -8,11 +10,7 @@ class ServerSteroids {
         this.io.on('connection', socket => {
             console.log('New client connected:', socket.id);
 
-            socket.on('fileUpload', data => {
-                console.log('File uploaded:', data.fileName);
-                // Отправка ответа назад клиенту
-                socket.emit('serverResponse', { message: `Received your file: ${data.fileName}` });
-            });
+            ConnectionTest.PrimaryTest(socket); // Передай socket как аргумент в функцию
 
             socket.on('disconnect', () => {
                 console.log('Client disconnected:', socket.id);
