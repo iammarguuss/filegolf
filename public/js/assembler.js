@@ -53,6 +53,7 @@ export class SteroidFile {
         const meta = await metaSaver(this.#file)                        // saves metadata
             console.log("Metadata Saved: ", meta)
         const chunks = await ChunkSplitter(this.#file, meta);           // devides file into chanks
+            console.log("ChunkSplitter has done: ", chunks)
         const ObjectAssabler = await ChunkPreparation(chunks, meta);    // creates ready object
         const encryptedData = await ChunkEncryptor(ObjectAssabler);     // encrypts all the things
         console.log('Async asyncBlockFile Completed', encryptedData);
