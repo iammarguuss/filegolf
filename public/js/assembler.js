@@ -2,9 +2,13 @@
 import { firstConnectionTest } from './modules/FirstConnectionTest.js';
 import { InterfaceReporter } from './modules/InterfaceReporter.js';
 import { RsaGenerator } from './modules/RsaGenerator.js';
-import { RequestSender } from './modules/RequestSender.js';
+import { registerRequest } from './modules/registerRequest.js';
 import { ChunkSplitter } from './modules/ChunkSplitter.js';
-import { Encryptor } from './modules/Encryptor.js';
+import { pathFinder } from './modules/pathFinder.js';
+import { metaSaver } from './modules/MetaSaver.js';
+import { ChunkPreparation } from './modules/ChunkPreparation.js';
+import { ChunkEncryptor } from './modules/ChunkEncryptor.js';
+//import { pathFinder } from './modules/pathFinder.js';
 
 export class SteroidFile {
     #file;
@@ -21,7 +25,7 @@ export class SteroidFile {
             const isServerOn = await firstConnectionTest();
             if (isServerOn) {
                 InterfaceReporter.TestConnectionTrue();
-                await this.runParallelTasks();
+                await this.runParallelTasks(); // lanches 2 lines of methods encryption
             } else {
                 InterfaceReporter.TestConnectionFalse();
             }
@@ -31,27 +35,33 @@ export class SteroidFile {
     }
 
     async runParallelTasks() {
-        const task1 = this.asyncBlockOne();
-        const task2 = this.asyncBlockTwo();
+        const task1 = this.asyncBlockFile();    // works with files side
+        const task2 = this.asyncBlockEncr();    // makes encryption and key exchange
         await Promise.all([task1, task2]);
         console.log('Both async blocks completed');
         this.finalize();
     }
 
-    async asyncBlockOne() {
-        const rsaPair = await RsaGenerator.generate(this.#settings.keySize);
-        const response = await RequestSender.sendRequest(rsaPair);  // Предполагаем, что sendRequest использует rsaPair
-        console.log('Async Block One Completed', response);
+    async asyncBlockEncr() {
+        const rsaPair = await RsaGenerator(this.#settings.keySize);     // generates rsa key pair
+        const response = await registerRequest(rsaPair);                // registers responce on the server
+        const pather = await pathFinder(response);                      // fineds way to get signal id or something else for the exchange
+        console.log('Async asyncBlockEncr Completed', response);
     }
 
-    async asyncBlockTwo() {
-        const chunks = await ChunkSplitter.split(this.#file);
-        const encryptedData = await Encryptor.encrypt(chunks);
-        console.log('Async Block Two Completed', encryptedData);
+    async asyncBlockFile() {
+        const meta = await metaSaver(this.#file)                        // saves metadata
+            console.log("Metadata Saved: ", meta)
+        const chunks = await ChunkSplitter(this.#file, meta);           // devides file into chanks
+        const ObjectAssabler = await ChunkPreparation(chunks, meta);    // creates ready object
+        const encryptedData = await ChunkEncryptor(ObjectAssabler);     // encrypts all the things
+        console.log('Async asyncBlockFile Completed', encryptedData);
     }
 
     finalize() {
-        console.log('Finalizing operations.');
+//        while(true){
+            console.log('We have finished the prearaptions!');
+//        }
         // Здесь может быть код, который нужно выполнить после завершения обоих блоков
     }
 }
