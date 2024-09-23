@@ -44,6 +44,7 @@ export class SteroidFile {
 
     async asyncBlockEncr() {
         const rsaPair = await RsaGenerator(this.#settings.keySize);     // generates rsa key pair
+            console.log("Key Pair is generated", rsaPair)
         const response = await registerRequest(rsaPair);                // registers responce on the server
         const pather = await pathFinder(response);                      // fineds way to get signal id or something else for the exchange
         console.log('Async asyncBlockEncr Completed', response);
@@ -54,9 +55,9 @@ export class SteroidFile {
             console.log("Metadata Saved: ", meta)
         const chunks = await ChunkSplitter(this.#file, meta);           // devides file into chanks
             console.log("ChunkSplitter has done: ", chunks)
-        const ObjectAssabler = await ChunkPreparation(chunks, meta);    // creates ready object
-        const encryptedData = await ChunkEncryptor(ObjectAssabler);     // encrypts all the things
-        console.log('Async asyncBlockFile Completed', encryptedData);
+//        const ObjectAssabler = await ChunkPreparation(chunks, meta);    // creates ready object
+        const encryptedData = await ChunkEncryptor(chunks);             // encrypts all the things
+            console.log('Async asyncBlockFile Completed', encryptedData);
     }
 
     finalize() {
