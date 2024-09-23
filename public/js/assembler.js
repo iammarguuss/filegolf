@@ -2,7 +2,7 @@
 import { firstConnectionTest } from './modules/FirstConnectionTest.js';
 import { InterfaceReporter } from './modules/InterfaceReporter.js';
 import { RsaGenerator } from './modules/RsaGenerator.js';
-import { registerRequest } from './modules/registerRequest.js';
+import { registerRequest } from './modules/RegisterRequest.js';
 import { ChunkSplitter } from './modules/ChunkSplitter.js';
 import { pathFinder } from './modules/pathFinder.js';
 import { metaSaver } from './modules/MetaSaver.js';
