@@ -4,7 +4,7 @@ import { InterfaceReporter } from './modules/InterfaceReporter.js';
 import { RsaGenerator } from './modules/RsaGenerator.js';
 import { registerRequest } from './modules/RegisterRequest.js';
 import { ChunkSplitter } from './modules/ChunkSplitter.js';
-import { pathFinder } from './modules/pathFinder.js';
+import { PathFinder } from './modules/PathFinder.js'; // chage file name to big letter here
 import { metaSaver } from './modules/MetaSaver.js';
 import { ChunkPreparation } from './modules/ChunkPreparation.js';
 import { ChunkEncryptor } from './modules/ChunkEncryptor.js';
@@ -46,7 +46,7 @@ export class SteroidFile {
         const rsaPair = await RsaGenerator(this.#settings.keySize);     // generates rsa key pair
             console.log("Key Pair is generated", rsaPair)
         const response = await registerRequest(rsaPair);                // registers responce on the server
-        const pather = await pathFinder(response);                      // fineds way to get signal id or something else for the exchange
+        const pather = await PathFinder(response);                      // fineds way to get signal id or something else for the exchange
         console.log('Async asyncBlockEncr Completed', response);
     }
 
