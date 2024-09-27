@@ -1,5 +1,5 @@
 // Заглушка для нахождения пути
-export function pathFinder(response) {
+export function PathFinder(response) {
     return Promise.resolve("fake-path");
 }
 
