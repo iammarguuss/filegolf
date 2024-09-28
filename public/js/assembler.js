@@ -1,22 +1,22 @@
-// This is the class itself
+import { settings } from './modules/settings.js'; // Импорт настроек
 import { firstConnectionTest } from './modules/FirstConnectionTest.js';
 import { InterfaceReporter } from './modules/InterfaceReporter.js';
 import { RsaGenerator } from './modules/RsaGenerator.js';
-import { registerRequest } from './modules/RegisterRequest.js';
-import { ChunkSplitter } from './modules/ChunkSplitter.js';
-import { PathFinder } from './modules/PathFinder.js'; // chage file name to big letter here
+import { RegisterRequest } from './modules/RegisterRequest.js';
+import { PathFinder } from './modules/PathFinder.js';
 import { metaSaver } from './modules/MetaSaver.js';
-import { ChunkPreparation } from './modules/ChunkPreparation.js';
+import { ChunkSplitter } from './modules/ChunkSplitter.js';
 import { ChunkEncryptor } from './modules/ChunkEncryptor.js';
-//import { pathFinder } from './modules/pathFinder.js';
 
 export class SteroidFile {
     #file;
     #settings;
+    #socket;
 
-    constructor(settings, file) {
+    constructor(config, file) {
         this.#file = file;
-        this.#settings = settings;
+        this.#settings = config;
+        this.#socket = io(settings.io.url);
         this.initialize();
     }
 
@@ -25,7 +25,7 @@ export class SteroidFile {
             const isServerOn = await firstConnectionTest();
             if (isServerOn) {
                 InterfaceReporter.TestConnectionTrue();
-                await this.runParallelTasks(); // lanches 2 lines of methods encryption
+                await this.runParallelTasks(); // Launches 2 lines of methods encryption
             } else {
                 InterfaceReporter.TestConnectionFalse();
             }
@@ -35,35 +35,31 @@ export class SteroidFile {
     }
 
     async runParallelTasks() {
-        const task1 = this.asyncBlockFile();    // works with files side
-        const task2 = this.asyncBlockEncr();    // makes encryption and key exchange
+        const task1 = this.asyncBlockFile();
+        const task2 = this.asyncBlockEncr();
         await Promise.all([task1, task2]);
         console.log('Both async blocks completed');
         this.finalize();
     }
 
     async asyncBlockEncr() {
-        const rsaPair = await RsaGenerator(this.#settings.keySize);     // generates rsa key pair
-            console.log("Key Pair is generated", rsaPair)
-        const response = await registerRequest(rsaPair);                // registers responce on the server
-        const pather = await PathFinder(response);                      // fineds way to get signal id or something else for the exchange
+        const rsaPair = await RsaGenerator(this.#settings.keySize);             //TODO SAVE THE KEY IN settings.keys
+        console.log("Key Pair is generated", rsaPair);
+        const response = await RegisterRequest(rsaPair.publicKey, this.#socket);
+        const pather = await PathFinder(response);
         console.log('Async asyncBlockEncr Completed', response);
     }
 
     async asyncBlockFile() {
-        const meta = await metaSaver(this.#file)                        // saves metadata
-            console.log("Metadata Saved: ", meta)
-        const chunks = await ChunkSplitter(this.#file, meta);           // devides file into chanks
-            console.log("ChunkSplitter has done: ", chunks)
-//        const ObjectAssabler = await ChunkPreparation(chunks, meta);    // creates ready object
-        const encryptedData = await ChunkEncryptor(chunks);             // encrypts all the things
-            console.log('Async asyncBlockFile Completed', encryptedData);
+        const meta = await metaSaver(this.#file);
+        console.log("Metadata Saved: ", meta);
+        const chunks = await ChunkSplitter(this.#file, meta);
+        console.log("ChunkSplitter has done: ", chunks);
+        const encryptedData = await ChunkEncryptor(chunks);
+        console.log('Async asyncBlockFile Completed', encryptedData);
     }
 
     finalize() {
-//        while(true){
-            console.log('We have finished the prearaptions!');
-//        }
-        // Здесь может быть код, который нужно выполнить после завершения обоих блоков
+        console.log('We have finished the preparations!');
     }
 }
