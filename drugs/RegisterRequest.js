@@ -1,13 +1,13 @@
 class RegisterRequest {
-    static Simple(socket) {
+    static Simple(socket, links) { // Теперь links передается как параметр
         socket.on('RegisterRequest', data => {
             console.log('Received RegisterRequest:', data);
 
-            // TODO REGISTER REQUEST
+            // Вызываем метод create из класса Links
+            const code = links.create(data.publicKey, socket.id, data.settings);
 
-            // Просто отправляем обратно ответ OK
-            socket.emit('RegisterResponsed', { status: 'OK' });
-
+            // Отправляем обратно код доступа и статус OK
+            socket.emit('RegisterResponsed', { code: code, status: 'OK' });
         });
     }
 }

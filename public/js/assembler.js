@@ -10,12 +10,15 @@ import { ChunkEncryptor } from './modules/ChunkEncryptor.js';
 
 export class SteroidFile {
     #file;
-    #settings;
     #socket;
+    #settings = {
+        change:{},
+        keys:{}
+    };
 
     constructor(config, file) {
         this.#file = file;
-        this.#settings = config;
+        this.#settings.change = config;
         this.#socket = io(settings.io.url);
         this.initialize();
     }
@@ -43,9 +46,14 @@ export class SteroidFile {
     }
 
     async asyncBlockEncr() {
-        const rsaPair = await RsaGenerator(this.#settings.keySize);             //TODO SAVE THE KEY IN settings.keys
+        const rsaPair = await RsaGenerator(this.#settings.change.keySize);             
+        this.#settings.keys = await rsaPair;
         console.log("Key Pair is generated", rsaPair);
-        const response = await RegisterRequest(rsaPair.publicKey, this.#socket);
+        let pack = {
+            type: this.#settings.change.shareType,
+            keySize: this.#settings.change.keySize
+        }
+        const response = await RegisterRequest(rsaPair.publicKey, this.#socket, pack);
         const pather = await PathFinder(response);
         console.log('Async asyncBlockEncr Completed', response);
     }
