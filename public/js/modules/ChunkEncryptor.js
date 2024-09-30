@@ -1,3 +1,5 @@
+import { InterfaceReporter } from './InterfaceReporter.js';
+
 export async function ChunkEncryptor(chunks) {
     for (let i = 1; i < Object.keys(chunks).length; i++) {
         if (chunks[0][i]) { // Убедимся, что метаданные для этого чанка существуют
@@ -20,6 +22,7 @@ export async function ChunkEncryptor(chunks) {
             const hashBuffer = await crypto.subtle.digest('SHA-256', encryptedData);
             const hashHex = Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
             chunks[0][i].encryptedSignature = hashHex;
+            InterfaceReporter.colorChunk(i, 'red');
         }
     }
     return chunks;

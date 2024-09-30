@@ -1,3 +1,5 @@
+import { InterfaceReporter } from './InterfaceReporter.js';
+
 export async function ChunkSplitter(file, meta) {
     const chunkSize = Math.min(Math.max(file.size / 1000, 128 * 1024), 16 * 1024 * 1024);  // Вычисление размера чанка
     const chunks = { 0: { 0: meta } };  // Инициализация нулевого чанка с метаданными
@@ -34,6 +36,7 @@ export async function ChunkSplitter(file, meta) {
             size: chunkSize
         };
 
+        InterfaceReporter.colorChunk(chunkIndex, 'green');
         position += chunkSize;
         chunkIndex++;
     }
