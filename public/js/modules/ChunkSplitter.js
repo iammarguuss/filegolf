@@ -5,6 +5,7 @@ export async function ChunkSplitter(file, meta) {
     const chunks = { 0: { 0: meta } };  // Инициализация нулевого чанка с метаданными
     let position = 0;
     let chunkIndex = 1;  // Начинаем с 1, так как 0 зарезервирован для метаданных
+    const totalChunks = Math.ceil(file.size / chunkSize);
 
     // Read file in chunks
     while (position < file.size) {
@@ -36,7 +37,7 @@ export async function ChunkSplitter(file, meta) {
             size: chunkSize
         };
 
-        InterfaceReporter.colorChunk(chunkIndex, 'green');
+        InterfaceReporter.addChunk(chunkIndex, totalChunks);
         position += chunkSize;
         chunkIndex++;
     }
