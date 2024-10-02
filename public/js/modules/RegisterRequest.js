@@ -1,3 +1,5 @@
+import { InterfaceReporter } from './InterfaceReporter.js';
+
 export async function RegisterRequest(rsaPublicKey, socket, config) {
     // Отправляем запрос на регистрацию с публичным ключом через WebSocket
     const requestData = {
@@ -11,6 +13,7 @@ export async function RegisterRequest(rsaPublicKey, socket, config) {
     // Устанавливаем обработчики событий для получения данных от сервера
     socket.on('RegisterResponsed', response => {
         console.log('Response from server:', response);
+        InterfaceReporter.displayTextAfterElement('Just_a_random_ID', `Here is your link Sir: ${response.code}`);
     });
 
     socket.onerror = function(error) {

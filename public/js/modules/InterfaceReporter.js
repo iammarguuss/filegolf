@@ -3,10 +3,10 @@ export class InterfaceReporter {
 
     // Метод для добавления чанка
     static addChunk(index, totalChunks) {
-        const size = Math.sqrt(1000000 / totalChunks); // Размер каждого чанка
+        const size = Math.sqrt(80000 / totalChunks); // Размер каждого чанка
         const chunk = document.createElement('div');
-        chunk.style.width = `${size}px`;
-        chunk.style.height = `${size}px`;
+        chunk.style.width = `${size-2}px`;
+        chunk.style.height = `${size-2}px`;
         chunk.style.background = 'lightgrey'; // Начальный цвет чанков
         chunk.style.border = '1px solid black'; // Граница для визуального разделения чанков
         chunk.style.display = 'inline-block'; // Чтобы чанки располагались рядом друг с другом по возможности
@@ -30,5 +30,18 @@ export class InterfaceReporter {
     static TestConnectionFalse() {
         console.error("Connection test failed.");
         // Здесь можно добавить дополнительный код для обновления интерфейса пользователя
+    }
+
+    static displayTextAfterElement(elementId, text) {
+        const referenceElement = document.getElementById(elementId);
+        if (referenceElement) {
+            const textNode = document.createElement('div');
+            textNode.textContent = text; // Установка текста
+            textNode.style.color = 'white'; // Настройка стиля текста
+            textNode.style.marginTop = '10px'; // Добавление отступа сверху
+            referenceElement.parentNode.insertBefore(textNode, referenceElement.nextSibling);
+        } else {
+            console.error('Element with the specified ID was not found.');
+        }
     }
 }
